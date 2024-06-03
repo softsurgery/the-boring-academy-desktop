@@ -1,79 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import AppBar from './AppBar';
+import React from 'react';
+import { Popover, PopoverContent, PopoverTrigger } from './components/ui/popover';
+import { Input } from './components/ui/input';
+import { Button } from './components/ui/button';
+import { Label } from './components/ui/label';
 
 function App() {
-  console.log(window.ipcRenderer);
-
-  const [isOpen, setOpen] = useState(false);
-  const [isSent, setSent] = useState(false);
-  const [fromMain, setFromMain] = useState<string | null>(null);
-
-  const handleToggle = () => {
-    if (isOpen) {
-      setOpen(false);
-      setSent(false);
-    } else {
-      setOpen(true);
-      setFromMain(null);
-    }
-  };
-  const sendMessageToElectron = () => {
-    if (window.Main) {
-      window.Main.sendMessage("Hello I'm from React World");
-    } else {
-      setFromMain('You are in a Browser, so no Electron functions are available');
-    }
-    setSent(true);
-  };
-
-  useEffect(() => {
-    if (isSent && window.Main)
-      window.Main.on('message', (message: string) => {
-        setFromMain(message);
-      });
-  }, [fromMain, isSent]);
-
   return (
     <div className="flex flex-col h-screen">
-      {window.Main && (
-        <div className="flex-none">
-          <AppBar />
-        </div>
-      )}
-      <div className="flex-auto">
-        <div className=" flex flex-col justify-center items-center h-full bg-gray-800 space-y-4">
-          <h1 className="text-2xl text-gray-200">Vite + React + Typescript + Electron + Tailwind</h1>
-          <button
-            className="bg-yellow-400 py-2 px-4 rounded focus:outline-none shadow hover:bg-yellow-200"
-            onClick={handleToggle}
-          >
-            Click Me
-          </button>
-          {isOpen && (
-            <div className="flex flex-col space-y-4 items-center">
-              <div className="flex space-x-3">
-                <h1 className="text-xl text-gray-50">💝 Welcome 💝, now send a message to the Main 📩📩</h1>
-                <button
-                  onClick={sendMessageToElectron}
-                  className=" bg-green-400 rounded px-4 py-0 focus:outline-none hover:bg-green-300"
-                >
-                  Send
-                </button>
+      <div className="flex-auto m-5">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline">Open popover</Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80">
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">Dimensions</h4>
+                <p className="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
               </div>
-              {isSent && (
-                <div>
-                  <h4 className=" text-green-500">Message sent!!</h4>
+              <div className="grid gap-2">
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <Label htmlFor="width">Width</Label>
+                  <Input id="width" defaultValue="100%" className="col-span-2 h-8" />
                 </div>
-              )}
-              {fromMain && (
-                <div>
-                  {' '}
-                  <h4 className=" text-yellow-200">{fromMain}</h4>
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <Label htmlFor="maxWidth">Max. width</Label>
+                  <Input id="maxWidth" defaultValue="300px" className="col-span-2 h-8" />
                 </div>
-              )}
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <Label htmlFor="height">Height</Label>
+                  <Input id="height" defaultValue="25px" className="col-span-2 h-8" />
+                </div>
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <Label htmlFor="maxHeight">Max. height</Label>
+                  <Input id="maxHeight" defaultValue="none" className="col-span-2 h-8" />
+                </div>
+              </div>
             </div>
-          )}
-        </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );
