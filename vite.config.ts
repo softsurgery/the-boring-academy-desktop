@@ -1,8 +1,8 @@
 import react from '@vitejs/plugin-react';
 import { UserConfig, ConfigEnv } from 'vite';
-import { join } from 'path';
+import path from 'path';
 
-const srcRoot = join(__dirname, 'src');
+const srcRoot = path.resolve(__dirname, 'src');
 
 export default ({ command }: ConfigEnv): UserConfig => {
   // DEV
@@ -13,11 +13,11 @@ export default ({ command }: ConfigEnv): UserConfig => {
       plugins: [react()],
       resolve: {
         alias: {
-          '/@': srcRoot
+          '@': path.resolve(__dirname, './src')
         }
       },
       build: {
-        outDir: join(srcRoot, '/out'),
+        outDir: path.resolve(srcRoot, '/out'),
         emptyOutDir: true,
         rollupOptions: {}
       },
@@ -40,7 +40,7 @@ export default ({ command }: ConfigEnv): UserConfig => {
       }
     },
     build: {
-      outDir: join(srcRoot, '/out'),
+      outDir: path.resolve(srcRoot, '/out'),
       emptyOutDir: true,
       rollupOptions: {}
     },
